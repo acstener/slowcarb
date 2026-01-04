@@ -7,7 +7,7 @@ import { useMealPlanStore } from '@/stores/mealPlanStore'
 import { cn } from '@/lib/utils'
 import type { Recipe, Day, MealType } from '@/types/recipe'
 
-const proteins = ['all', 'chicken', 'beef', 'pork', 'fish', 'legumes'] as const
+const proteins = ['all', 'chicken', 'beef', 'pork', 'fish', 'lamb', 'legumes'] as const
 
 export function RecipesPage() {
   const [search, setSearch] = useState('')

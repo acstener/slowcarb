@@ -53,7 +53,7 @@ export function RecipeDetailModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-xl p-0 gap-0 border-0 shadow-2xl overflow-hidden"
+        className="max-w-xl w-[calc(100%-2rem)] p-0 gap-0 border-0 shadow-2xl overflow-hidden max-h-[90vh]"
       >
         {/* Close */}
         <DialogClose className="absolute right-4 top-4 z-10 p-2 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white transition-colors">
@@ -70,7 +70,7 @@ export function RecipeDetailModal({
         </div>
 
         {/* Content */}
-        <div className="px-8 py-6 max-h-[60vh] overflow-y-auto">
+        <div className="px-5 sm:px-8 py-5 sm:py-6 overflow-y-auto">
           {/* Title */}
           <h2 className="font-display text-2xl tracking-tight">
             {recipe.title}
@@ -150,7 +150,7 @@ export function RecipeDetailModal({
         </div>
 
         {/* Footer - understated */}
-        <div className="px-8 py-4 border-t border-neutral-100 bg-neutral-50/50">
+        <div className="px-5 sm:px-8 py-4 border-t border-neutral-100 bg-neutral-50/50">
           {!showPicker ? (
             <button
               onClick={() => setShowPicker(true)}

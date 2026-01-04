@@ -26,8 +26,8 @@ export interface Recipe {
   cookTime: number
   servings: number
   nutrition: Nutrition
-  mealType: ('breakfast' | 'lunch' | 'dinner')[]
-  primaryProtein: 'chicken' | 'beef' | 'pork' | 'fish' | 'eggs' | 'legumes'
+  mealType: ('breakfast' | 'lunch' | 'dinner' | 'brunch')[]
+  primaryProtein: 'chicken' | 'beef' | 'pork' | 'fish' | 'eggs' | 'legumes' | 'lamb'
   tags: string[]
   ingredients: Ingredient[]
   instructions: string[]

@@ -21,6 +21,16 @@ const dayLabels: Record<Day, string> = {
   sunday: 'Sun',
 }
 
+const dayLabelsFull: Record<Day, string> = {
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+}
+
 function RecipePicker({
   onSelect,
   mealType,
@@ -142,6 +152,7 @@ export function MealPlannerPage() {
 
   const plan = getCurrentPlan()
   const [servingsInput, setServingsInput] = useState(plan.servings)
+  const [mobileDay, setMobileDay] = useState<Day>('monday')
 
   // Calculate week dates
   const [year, weekStr] = currentWeekId.split('-W')
@@ -215,9 +226,70 @@ export function MealPlannerPage() {
           </Button>
         </div>
 
-        {/* Planner Grid */}
-        <div className="overflow-x-auto pb-4">
-          <div className="grid grid-cols-7 gap-4 min-w-[900px]">
+        {/* Mobile Day Selector */}
+        <div className="md:hidden mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const idx = DAYS.indexOf(mobileDay)
+                setMobileDay(DAYS[idx === 0 ? 6 : idx - 1])
+              }}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <h3 className="font-display text-lg font-semibold">
+              {dayLabelsFull[mobileDay]}
+            </h3>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const idx = DAYS.indexOf(mobileDay)
+                setMobileDay(DAYS[idx === 6 ? 0 : idx + 1])
+              }}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+
+          {/* Day Pills */}
+          <div className="flex justify-center gap-1 mb-6">
+            {DAYS.map((day) => (
+              <button
+                key={day}
+                onClick={() => setMobileDay(day)}
+                className={cn(
+                  'w-10 h-10 rounded-full text-xs font-medium transition-colors',
+                  mobileDay === day
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted'
+                )}
+              >
+                {dayLabels[day]}
+              </button>
+            ))}
+          </div>
+
+          {/* Mobile Meal Slots */}
+          <div className="space-y-4">
+            {MEAL_TYPES.map((mealType) => (
+              <MealSlot
+                key={mealType}
+                day={mobileDay}
+                mealType={mealType}
+                recipeId={plan.days[mobileDay]?.[mealType]?.recipeId}
+                onAdd={(recipe) => addRecipeToSlot(recipe.id, mobileDay, mealType)}
+                onRemove={() => removeRecipeFromSlot(mobileDay, mealType)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop Planner Grid */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-7 gap-4">
             {/* Day Headers */}
             {DAYS.map((day) => (
               <div key={day} className="text-center pb-2 border-b">
@@ -246,22 +318,22 @@ export function MealPlannerPage() {
         </div>
 
         {/* Weekly Summary */}
-        <div className="mt-8 p-6 rounded-xl bg-muted/50">
+        <div className="mt-8 p-4 sm:p-6 rounded-xl bg-muted/50">
           <h3 className="font-medium mb-4">Weekly Summary</h3>
-          <div className="flex gap-8">
-            <div>
-              <span className="text-3xl font-mono font-bold text-primary">{totalMeals}</span>
-              <span className="text-muted-foreground text-sm block">meals planned</span>
+          <div className="grid grid-cols-3 gap-4 sm:flex sm:gap-8">
+            <div className="text-center sm:text-left">
+              <span className="text-2xl sm:text-3xl font-mono font-bold text-primary">{totalMeals}</span>
+              <span className="text-muted-foreground text-xs sm:text-sm block">meals</span>
             </div>
-            <div>
-              <span className="text-3xl font-mono font-bold text-red-500">{totalProtein}g</span>
-              <span className="text-muted-foreground text-sm block">total protein</span>
+            <div className="text-center sm:text-left">
+              <span className="text-2xl sm:text-3xl font-mono font-bold text-red-500">{totalProtein}g</span>
+              <span className="text-muted-foreground text-xs sm:text-sm block">protein</span>
             </div>
-            <div>
-              <span className="text-3xl font-mono font-bold text-muted-foreground">
+            <div className="text-center sm:text-left">
+              <span className="text-2xl sm:text-3xl font-mono font-bold text-muted-foreground">
                 {totalMeals > 0 ? Math.round(totalProtein / totalMeals) : 0}g
               </span>
-              <span className="text-muted-foreground text-sm block">avg per meal</span>
+              <span className="text-muted-foreground text-xs sm:text-sm block">avg/meal</span>
             </div>
           </div>
         </div>
